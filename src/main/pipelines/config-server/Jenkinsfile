@@ -4,13 +4,12 @@ pipeline {
     environment {
         REPO_URL = 'https://github.com/maurolisena/config-server.git'
         BRANCH = 'master'
-        PROJECT_DIR = 'config-server'
     }
 
     stages {
             stage('Clonar código fuente') {
                 steps {
-                    git branch: "${BRANCH}", url: "${REPO_URL}"
+                    git branch: "${BRANCH}", credentialsId: 'GitHub', url: "${REPO_URL}"
                 }
             }
 
