@@ -17,8 +17,6 @@ services:
     environment:
       - CASC_JENKINS_CONFIG=/var/jenkins_home/casc_configs/main.yaml
     user: root
-    depends_on:
-      - config-server
 
 volumes:
   jenkins_home:

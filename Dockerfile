@@ -21,17 +21,23 @@ RUN apt-get update && \
         tee /etc/apt/sources.list.d/docker.list > /dev/null && \
     apt-get update && \
     apt-get install -y docker-ce-cli docker-compose-plugin && \
-    groupadd docker && \
-    usermod -aG docker jenkins
+    groupadd -f docker && \
+    usermod -aG docker jenkins && \
+    apt-get clean
 
-# Instalar curl para descargar configs
-USER root
-RUN apt-get update && apt-get install -y curl && apt-get clean
+#Instalar plugins de Jenkins
+COPY src/main/resources/plugins.txt /usr/share/jenkins/ref/plugins.txt
+RUN jenkins-plugin-cli --plugin-file /usr/share/jenkins/ref/plugins.txt
+
+# Crear carpeta para configuración JCasC
+RUN mkdir -p /var/jenkins_home/casc_configs && \
+    chown -R jenkins:jenkins /var/jenkins_home/casc_configs
+
+# Copiar el archivo YAML de configuración
+COPY src/main/resources/jenkins-server.yaml /var/jenkins_home/casc_configs/main.yaml
+
+# Cambiar de nuevo al usuario Jenkins
 USER jenkins
 
-# Copiamos el entrypoint custom
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
-
-# Definimos entrypoint custom
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+# Setear ruta JCasC
+ENV CASC_JENKINS_CONFIG=/var/jenkins_home/casc_configs/main.yaml
