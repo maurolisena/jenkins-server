@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-            REPO_URL = 'https://github.com/maurolisena/eureka-server.git'
-            BRANCH = 'main'
-            PROJECT_DIR = 'eureka-server'
+        REPO_URL = 'https://github.com/maurolisena/eureka-server.git'
+        BRANCH = 'main'
+        PROJECT_DIR = 'eureka-server'
     }
 
     stages {
@@ -14,7 +14,7 @@ pipeline {
                 git branch: "${BRANCH}", credentialsId: 'GitHub', url: "${REPO_URL}"
             }
         }
-    stages {
+
         stage('Levantar servicios') {
             steps {
                 sh 'docker compose up -d'
