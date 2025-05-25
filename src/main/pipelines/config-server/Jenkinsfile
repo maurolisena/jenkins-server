@@ -4,6 +4,7 @@ pipeline {
     environment {
         REPO_URL = 'https://github.com/maurolisena/config-server.git'
         BRANCH = 'master'
+        PROJECT_DIR = 'config-server'
     }
 
     stages {
