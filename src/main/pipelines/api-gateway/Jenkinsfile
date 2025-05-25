@@ -3,7 +3,7 @@ pipeline {
 
     environment {
             REPO_URL = 'https://github.com/maurolisena/api-gateway.git'
-            BRANCH = 'main'
+            BRANCH = 'master'
             PROJECT_DIR = 'api-gateway'
     }
 
