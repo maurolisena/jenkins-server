@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+
+    environment {
+            REPO_URL = 'https://github.com/maurolisena/eureka-server.git'
+            BRANCH = 'main'
+            PROJECT_DIR = 'eureka-server'
+    }
+
+    stages {
+
+        stage('Clonar código fuente') {
+            steps {
+                git branch: "${BRANCH}", credentialsId: 'GitHub', url: "${REPO_URL}"
+            }
+        }
+    stages {
+        stage('Levantar servicios') {
+            steps {
+                sh 'docker compose up -d'
+            }
+        }
+
+        stage('Verificar servicios') {
+            steps {
+                sh 'docker ps'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finalizado'
+        }
+    }
+}
