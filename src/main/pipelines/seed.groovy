@@ -25,3 +25,17 @@ pipelineJob('keycloack-server') {
         }
     }
 }
+
+pipelineJob('gateway-server') {
+    definition {
+        cpsScm {
+            scm {
+                git {
+                    remote { url('https://github.com/maurolisena/jenkins-server.git') }
+                    branch('master')
+                }
+            }
+            scriptPath('src/main/pipelines/api-gateway/Jenkinsfile')
+        }
+    }
+}

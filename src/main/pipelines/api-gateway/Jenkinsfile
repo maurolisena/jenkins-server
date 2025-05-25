@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+
+    environment {
+            REPO_URL = 'https://github.com/maurolisena/api-gateway.git'
+            BRANCH = 'main'
+            PROJECT_DIR = 'api-gateway'
+    }
+
+    stages {
+
+        stage('Clonar código fuente') {
+            steps {
+                git branch: "${BRANCH}", credentialsId: 'GitHub', url: "${REPO_URL}"
+            }
+        }
+
+        stage('Levantar servicios') {
+            steps {
+                dir("${PROJECT_DIR}") {
+                    sh 'docker compose up -d'
+                }
+            }
+        }
+
+        stage('Verificar servicios') {
+            steps {
+                sh 'docker ps'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finalizado'
+        }
+    }
+}
