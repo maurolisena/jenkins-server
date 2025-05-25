@@ -24,4 +24,14 @@ RUN apt-get update && \
     groupadd docker && \
     usermod -aG docker jenkins
 
+# Instalar curl para descargar configs
+USER root
+RUN apt-get update && apt-get install -y curl && apt-get clean
 USER jenkins
+
+# Copiamos el entrypoint custom
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Definimos entrypoint custom
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
