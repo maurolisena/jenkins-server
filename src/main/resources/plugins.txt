@@ -1,0 +1,17 @@
+configuration-as-code
+credentials
+git
+github
+mailer
+email-ext
+pipeline-graph-view
+timestamper
+simple-theme-plugin
+matrix-auth
+script-security
+workflow-job
+workflow-aggregator
+workflow-cps
+ssh-credentials
+plain-credentials
+git-client
