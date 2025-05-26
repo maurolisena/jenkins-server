@@ -1,14 +1,14 @@
 credentials:
   system:
     domainCredentials:
-    - credentials:
-      - usernamePassword:
-          description: "Git Hub Credentials"
-          id: "GitHub"
-          password: "{AQAAABAAAAAwXm/6O4x281x06tN8Q5vrb6HkAX8y9BpRLE5HVjF31KfaTG/nf+swkKfE90TT2jhI2izzbypMIAURnmo7cijwZw==}"
-          scope: GLOBAL
-          username: "maurolisena"
-          usernameSecret: true
+      - credentials:
+          - usernamePassword:
+              description: "Git Hub Credentials"
+              id: "GitHub"
+              password: "{AQAAABAAAABwETY7/cijZcFJLA9HgcvULwjn2ITyIgUzd37xakRa6+7W65x7HYlRjj48132WGqx0dVr6W9+8P4IM2NzUWQIERa2I+GoL3rVkG1DEiY1jzvfop30/YNmEZS2VRX9lsviIJM07hJVSkOgm62x9L3XAlJZuHTappzkENuBmkI5KFB4=}"
+              scope: GLOBAL
+              username: "maurolisena"
+              usernameSecret: true
 jenkins:
   authorizationStrategy:
     loggedInUsersCanDoAnything:
@@ -17,22 +17,25 @@ jenkins:
     standard:
       excludeClientIPFromCrumb: false
   disableRememberMe: false
+  disabledAdministrativeMonitors:
+    - "jenkins.monitor.JavaVersionRecommendationAdminMonitor-17-2026-03-31-WARNING"
+    - "jenkins.diagnostics.ControllerExecutorsNoAgents"
   labelAtoms:
-  - name: "built-in"
+    - name: "built-in"
   markupFormatter: "plainText"
   mode: NORMAL
   myViewsTabBar: "standard"
   nodeMonitors:
-  - "architecture"
-  - "clock"
-  - diskSpace:
-      freeSpaceThreshold: "1GiB"
-      freeSpaceWarningThreshold: "2GiB"
-  - "swapSpace"
-  - tmpSpace:
-      freeSpaceThreshold: "1GiB"
-      freeSpaceWarningThreshold: "2GiB"
-  - "responseTime"
+    - "architecture"
+    - "clock"
+    - diskSpace:
+        freeSpaceThreshold: "1GiB"
+        freeSpaceWarningThreshold: "2GiB"
+    - "swapSpace"
+    - tmpSpace:
+        freeSpaceThreshold: "1GiB"
+        freeSpaceWarningThreshold: "2GiB"
+    - "responseTime"
   numExecutors: 2
   primaryView:
     all:
@@ -47,26 +50,31 @@ jenkins:
       allowsSignup: false
       enableCaptcha: false
       users:
-      - id: "mlisena"
-        name: "Mauro Lisena"
-        properties:
-        - "consoleUrlProvider"
-        - "myView"
-        - preferredProvider:
-            providerId: "default"
-        - "timezone"
-        - "experimentalFlags"
-        - mailer:
-            emailAddress: "maurolisena@gmail.com"
-        - "apiToken"
+        - id: "mlisena"
+          name: "Mauro Lisena"
+          properties:
+            - theme:
+                theme: "noOp"
+            - "myView"
+            - "experimentalFlags"
+            - "apiToken"
+            - consoleUrlProvider:
+                providers:
+                  - "pipelineGraphView"
+            - mailer:
+                emailAddress: "maurolisena@gmail.com"
+            - preferredProvider:
+                providerId: "io.jenkins.plugins.pipelinegraphview.PipelineGraphDisplayURLProvider"
+            - timezone:
+                timeZoneName: "America/Buenos_Aires"
   slaveAgentPort: 50000
   updateCenter:
     sites:
-    - id: "default"
-      url: "https://updates.jenkins.io/update-center.json"
+      - id: "default"
+        url: "https://updates.jenkins.io/update-center.json"
   views:
-  - all:
-      name: "all"
+    - all:
+        name: "all"
   viewsTabBar: "standard"
 globalCredentialsConfiguration:
   configuration:
@@ -78,6 +86,8 @@ appearance:
     showGraphOnJobPage: false
   prism:
     theme: PRISM
+  themeManager:
+    disableUserThemes: false
 security:
   apiToken:
     creationOfLegacyTokenEnabled: false
@@ -90,10 +100,22 @@ security:
     allowedOnController: false
   gitHostKeyVerificationConfiguration:
     sshHostKeyVerificationStrategy: "knownHostsFileVerificationStrategy"
+  globalJobDslSecurityConfiguration:
+    useScriptSecurity: true
+  scriptApproval:
+    approvedScriptHashes:
+      - "SHA512:445e31adb08b3a90070dd796697cf064f7d29c381e28b5c3e44658f63c74499c6f05d23b4b2c73a6ca5122c77a1fb3edecbaaaa6da8990918be5e2124321ee65"
+      - "SHA512:7634ce0ef8d3605f193a0c3fa49e921e0913dee5d436e399945063b0515bb9687f8cd5451f5a51080c8ed5bcca27e0ec0f7fe7c1bb188344440b1ff264af5ecf"
+      - "SHA512:97feece84effab10d4c187b88d41cf4218d83d35062b60e2eadb79f3c00c5abc15348932059768e39ef90695e9d7024e42944106ff7c973db1e41981e0ce98df"
+      - "SHA512:abbdc3ba36c9081715460d60e1f0d466a41ce0867ec00aff3d85b6f38a3810671cbd95b33316b75b10a6854e9350cb4d111aa390c029f02870c27bdc5b3dd032"
+      - "SHA512:ddd52a1ef76ef0dca89029495459dab89b2e38d7ec13974b59e28462221ee700506a9be7a9362644b2b4e7e8e938538dd4f82a91dbbd043535536786f5276151"
+    forceSandbox: false
 unclassified:
   buildDiscarders:
     configuredBuildDiscarders:
-    - "jobBuildDiscarder"
+      - "jobBuildDiscarder"
+  buildStepOperation:
+    enabled: false
   email-ext:
     adminRequiredForTemplateTesting: false
     allowUnregisteredEnabled: false
@@ -105,17 +127,35 @@ unclassified:
       Check console output at $BUILD_URL to view the results.
     defaultSubject: "$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!"
     defaultTriggerIds:
-    - "hudson.plugins.emailext.plugins.trigger.FailureTrigger"
+      - "hudson.plugins.emailext.plugins.trigger.FailureTrigger"
     maxAttachmentSize: -1
     maxAttachmentSizeMb: -1
     precedenceBulk: false
     throttlingEnabled: false
     watchingEnabled: false
+  enrichedSummaryConfig:
+    enrichedSummaryEnabled: false
+    httpClientDelayBetweenRetriesInSeconds: 1
+    httpClientMaxRetries: 3
+    httpClientTimeoutInSeconds: 1
   fingerprints:
     fingerprintCleanupDisabled: false
     storage: "file"
+  gitHubConfiguration:
+    apiRateLimitChecker: ThrottleForNormalize
   gitHubPluginConfig:
     hookUrl: "http://localhost:8082/github-webhook/"
+  globalTimeOutConfiguration:
+    operations:
+      - "abortOperation"
+    overwriteable: false
+  injectionConfig:
+    allowUntrusted: false
+    checkForBuildAgentErrors: false
+    enabled: false
+    enforceUrl: false
+    injectCcudExtension: false
+    injectMavenExtension: false
   junitTestResultStorage:
     storage: "file"
   location:
@@ -142,8 +182,8 @@ unclassified:
 tool:
   git:
     installations:
-    - home: "git"
-      name: "Default"
+      - home: "git"
+        name: "Default"
   mavenGlobalConfig:
     globalSettingsProvider: "standard"
     settingsProvider: "standard"
