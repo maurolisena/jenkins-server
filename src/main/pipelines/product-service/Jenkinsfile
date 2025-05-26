@@ -12,9 +12,7 @@ pipeline {
 
         stage('Clonar código fuente') {
             steps {
-                dir("${PROJECT_DIR}") {
-                    git branch: "${BRANCH}", credentialsId: 'GitHub', url: "${REPO_URL}"
-                }
+                git branch: "${BRANCH}", credentialsId: 'GitHub', url: "${REPO_URL}"
             }
         }
 
@@ -60,18 +58,14 @@ pipeline {
 
         stage('Build') {
             steps {
-                dir("${PROJECT_DIR}") {
-                    sh 'mvn clean install -DskipTests'
-                }
+                sh 'mvn clean install -DskipTests'
             }
         }
 
         stage('SonarQube Analysis') {
              steps {
-                 dir("${PROJECT_DIR}") {
-                     withSonarQubeEnv("${SONARQUBE_ENV}") {
-                         sh 'mvn sonar:sonar -Dsonar.projectKey=nombre-del-proyecto -Dsonar.host.url=http://localhost:8889 -Dsonar.login=$SONAR_AUTH_TOKEN'
-                     }
+                 withSonarQubeEnv("${SONARQUBE_ENV}") {
+                     sh 'mvn sonar:sonar -Dsonar.projectKey=nombre-del-proyecto -Dsonar.host.url=http://localhost:8889 -Dsonar.login=$SONAR_AUTH_TOKEN'
                  }
              }
          }
