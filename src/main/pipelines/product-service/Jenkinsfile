@@ -64,7 +64,7 @@ pipeline {
             }
         }
 
-        sstage('SonarQube Analysis') {
+        stage('SonarQube Analysis') {
              steps {
                  dir("${PROJECT_DIR}") {
                      withSonarQubeEnv("${SONARQUBE_ENV}") {
