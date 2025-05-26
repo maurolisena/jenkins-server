@@ -39,7 +39,7 @@ pipeline {
                 sh '''
                     until docker exec mysql_inventory_database mysqladmin ping -h 127.0.0.1 -u mlisena --password=A8424628 --silent; do
                         echo "Esperando MySQL..."
-                        sleep 5
+                        sleep 30
                     done
                 '''
             }
