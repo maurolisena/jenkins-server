@@ -22,6 +22,12 @@ pipeline {
                 }
             }
 
+            stage('Build keycloack-server') {
+              steps {
+                build job: 'keycloack-server'
+              }
+            }
+
             stage('Verificar servicios') {
                 steps {
                     sh 'docker ps'
