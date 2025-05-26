@@ -56,16 +56,10 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                sh 'mvn clean install -DskipTests'
-            }
-        }
-
         stage('SonarQube Analysis') {
              steps {
                  withSonarQubeEnv("${SONARQUBE_ENV}") {
-                     sh 'mvn sonar:sonar -Dsonar.projectKey=nombre-del-proyecto -Dsonar.host.url=http://localhost:8889 -Dsonar.login=$SONAR_AUTH_TOKEN'
+                     sh 'mvn sonar:sonar -Dsonar.projectKey=nombre-del-proyecto -Dsonar.host.url=http://sonarqube-server:9000 -Dsonar.login=$SONAR_AUTH_TOKEN'
                  }
              }
          }
