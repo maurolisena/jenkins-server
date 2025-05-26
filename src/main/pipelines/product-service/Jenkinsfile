@@ -5,6 +5,7 @@ pipeline {
             REPO_URL = 'https://github.com/maurolisena/product-service.git'
             BRANCH = 'main'
             PROJECT_DIR = 'product-service'
+            SONARQUBE_ENV = 'SonarQube'
     }
 
     stages {
@@ -52,6 +53,32 @@ pipeline {
 
                 echo "Mostrando últimos logs de mongo_database para verificar scripts init"
                 sh 'docker logs --tail 30 mongo_database'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir("${PROJECT_DIR}") {
+                    sh 'mvn clean install -DskipTests'
+                }
+            }
+        }
+
+        sstage('SonarQube Analysis') {
+             steps {
+                 dir("${PROJECT_DIR}") {
+                     withSonarQubeEnv("${SONARQUBE_ENV}") {
+                         sh 'mvn sonar:sonar -Dsonar.projectKey=nombre-del-proyecto -Dsonar.host.url=http://localhost:8889 -Dsonar.login=$SONAR_AUTH_TOKEN'
+                     }
+                 }
+             }
+         }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
     }
