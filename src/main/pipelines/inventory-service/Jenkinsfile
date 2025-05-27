@@ -54,6 +54,24 @@ pipeline {
                 sh 'docker logs --tail 30 mysql_inventory_database'
             }
         }
+
+        stage('SonarQube Analysis') {
+             steps {
+                 withCredentials([string(credentialsId: 'SONAR_AUTH_TOKEN', variable: 'SONAR_AUTH_TOKEN')]) {
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=nombre-del-proyecto -Dsonar.host.url=http://sonarqube:9000 -Dsonar.login=$SONAR_AUTH_TOKEN'
+                 }
+             }
+         }
+
+        stage('Quality Gate') {
+            steps {
+                withCredentials([string(credentialsId: 'SONAR_AUTH_TOKEN', variable: 'SONAR_AUTH_TOKEN')]) {
+                    timeout(time: 2, unit: 'MINUTES') {
+                        waitForQualityGate abortPipeline: true
+                    }
+                }
+            }
+        }
     }
 
     post {
