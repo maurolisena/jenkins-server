@@ -23,6 +23,12 @@ pipeline {
             }
         }
 
+        stage('Levantar api-gateway') {
+          steps {
+            build job: 'api-gateway'
+          }
+        }
+
         stage('Verificar servicios') {
             steps {
                 sh 'docker ps'

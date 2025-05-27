@@ -22,9 +22,17 @@ pipeline {
                 }
             }
 
-            stage('Build keycloack-server') {
+            stage('Levantar servidores adicionales') {
               steps {
                 build job: 'keycloack-server'
+              }
+
+              steps {
+                build job: 'kafka-server'
+              }
+
+              steps {
+                build job: 'eureka-server'
               }
             }
 
