@@ -23,9 +23,9 @@ pipeline {
             }
         }
 
-        stage('Levantar api-gateway') {
+        stage('Levantar servicios adicionales') {
           steps {
-            build job: 'api-gateway'
+            build job: 'gateway-server'
           }
         }
 
