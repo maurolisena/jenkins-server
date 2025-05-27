@@ -16,3 +16,6 @@ workflow-cps
 ssh-credentials
 plain-credentials
 git-client
+blueocean
+sonar
+sonar-quality-gates

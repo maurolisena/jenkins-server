@@ -53,8 +53,6 @@ jenkins:
         - id: "mlisena"
           name: "Mauro Lisena"
           properties:
-            - theme:
-                theme: "noOp"
             - "myView"
             - "experimentalFlags"
             - "apiToken"
@@ -86,8 +84,6 @@ appearance:
     showGraphOnJobPage: false
   prism:
     theme: PRISM
-  themeManager:
-    disableUserThemes: false
 security:
   apiToken:
     creationOfLegacyTokenEnabled: false
@@ -111,11 +107,14 @@ security:
       - "SHA512:ddd52a1ef76ef0dca89029495459dab89b2e38d7ec13974b59e28462221ee700506a9be7a9362644b2b4e7e8e938538dd4f82a91dbbd043535536786f5276151"
     forceSandbox: false
 unclassified:
+  sonarGlobalConfiguration:
+    installations:
+      - name: "SonarQube"
+        serverUrl: "http://sonarqube:9000"
+        credentialsId: "sonar-token"
   buildDiscarders:
     configuredBuildDiscarders:
       - "jobBuildDiscarder"
-  buildStepOperation:
-    enabled: false
   email-ext:
     adminRequiredForTemplateTesting: false
     allowUnregisteredEnabled: false
@@ -133,11 +132,6 @@ unclassified:
     precedenceBulk: false
     throttlingEnabled: false
     watchingEnabled: false
-  enrichedSummaryConfig:
-    enrichedSummaryEnabled: false
-    httpClientDelayBetweenRetriesInSeconds: 1
-    httpClientMaxRetries: 3
-    httpClientTimeoutInSeconds: 1
   fingerprints:
     fingerprintCleanupDisabled: false
     storage: "file"
@@ -145,17 +139,6 @@ unclassified:
     apiRateLimitChecker: ThrottleForNormalize
   gitHubPluginConfig:
     hookUrl: "http://localhost:8082/github-webhook/"
-  globalTimeOutConfiguration:
-    operations:
-      - "abortOperation"
-    overwriteable: false
-  injectionConfig:
-    allowUntrusted: false
-    checkForBuildAgentErrors: false
-    enabled: false
-    enforceUrl: false
-    injectCcudExtension: false
-    injectMavenExtension: false
   junitTestResultStorage:
     storage: "file"
   location:
