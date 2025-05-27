@@ -23,21 +23,27 @@ pipeline {
             }
 
             stage('Build eureka-server') {
-              steps {
-                build job: 'eureka-server'
-              }
+                steps {
+                    build job: 'eureka-server'
+                }
             }
 
             stage('Build keycloack-server') {
-              steps {
-                build job: 'keycloack-server'
-              }
+                steps {
+                    build job: 'keycloack-server'
+                }
             }
 
             stage('Build kafka-server') {
-              steps {
-                build job: 'kafka-server'
-              }
+                steps {
+                    build job: 'kafka-server'
+                }
+            }
+
+            stage('Levantar servicios adicionales') {
+                steps {
+                    build job: 'gateway-server'
+                }
             }
 
             stage('Verificar servicios') {

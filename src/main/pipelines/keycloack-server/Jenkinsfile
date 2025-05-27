@@ -23,12 +23,6 @@ pipeline {
             }
         }
 
-        stage('Levantar servicios adicionales') {
-          steps {
-            build job: 'gateway-server'
-          }
-        }
-
         stage('Verificar servicios') {
             steps {
                 sh 'docker ps'
