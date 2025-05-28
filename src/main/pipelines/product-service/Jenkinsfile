@@ -56,19 +56,13 @@ pipeline {
             }
         }
 
-       stage('SonarQube Analysis') {
-           steps {
-               echo "Debug SonarQube Stage"
-               withCredentials([string(credentialsId: 'SONAR_AUTH_TOKEN', variable: 'SONAR_AUTH_TOKEN')]) {
-                   sh '''
-                       echo "Token: $SONAR_AUTH_TOKEN"
-                       mvn -v
-                       curl -v http://sonarqube:9000 || echo "No se pudo conectar a SonarQube"
-                       mvn sonar:sonar -Dsonar.projectKey=product-service -Dsonar.host.url=http://sonarqube:9000 -Dsonar.login=$SONAR_AUTH_TOKEN
-                   '''
-               }
-           }
-       }
+        stage('SonarQube Analysis') {
+             steps {
+                 withCredentials([string(credentialsId: 'SONAR_AUTH_TOKEN', variable: 'SONAR_AUTH_TOKEN')]) {
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=product-service -Dsonar.host.url=http://sonarqube:9000 -Dsonar.login=$SONAR_AUTH_TOKEN'
+                 }
+             }
+         }
 
         stage('Quality Gate') {
             steps {
