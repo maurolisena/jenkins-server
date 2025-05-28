@@ -5,7 +5,7 @@ pipeline {
             REPO_URL = 'https://github.com/maurolisena/product-service.git'
             BRANCH = 'main'
             PROJECT_DIR = 'product-service'
-            SONARQUBE_ENV = 'SonarQube'
+            SONARQUBE_ENV = 'sonarqube'
     }
 
     stages {
@@ -59,15 +59,13 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv("${SONARQUBE_ENV}") {
-                    withCredentials([string(credentialsId: 'SONAR_AUTH_TOKEN', variable: 'SONAR_AUTH_TOKEN')]) {
-                        sh '''
-                            mvn clean compile sonar:sonar \
-                              -Dsonar.projectKey=product-service \
-                              -Dsonar.host.url=http://sonarqube:9000 \
-                              -Dsonar.login=$SONAR_AUTH_TOKEN \
-                              -Dsonar.java.binaries=target/classes
-                        '''
-                    }
+                    sh '''
+                        mvn clean compile sonar:sonar \
+                          -Dsonar.projectKey=product-service \
+                          -Dsonar.host.url=http://sonarqube:9000 \
+                          -Dsonar.login=$SONAR_AUTH_TOKEN \
+                          -Dsonar.java.binaries=target/classes
+                    '''
                 }
             }
         }
