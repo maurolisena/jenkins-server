@@ -58,14 +58,16 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withCredentials([string(credentialsId: 'SONAR_AUTH_TOKEN', variable: 'SONAR_AUTH_TOKEN')]) {
-                    sh '''
-                        mvn clean compile sonar:sonar \
-                          -Dsonar.projectKey=product-service \
-                          -Dsonar.host.url=http://sonarqube:9000 \
-                          -Dsonar.login=$SONAR_AUTH_TOKEN \
-                          -Dsonar.java.binaries=target/classes
-                    '''
+                withSonarQubeEnv("${SONARQUBE_ENV}") {
+                    withCredentials([string(credentialsId: 'SONAR_AUTH_TOKEN', variable: 'SONAR_AUTH_TOKEN')]) {
+                        sh '''
+                            mvn clean compile sonar:sonar \
+                              -Dsonar.projectKey=product-service \
+                              -Dsonar.host.url=http://sonarqube:9000 \
+                              -Dsonar.login=$SONAR_AUTH_TOKEN \
+                              -Dsonar.java.binaries=target/classes
+                        '''
+                    }
                 }
             }
         }
