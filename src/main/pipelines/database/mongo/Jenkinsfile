@@ -18,7 +18,7 @@ pipeline {
             steps {
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                     echo "Construyendo imágenes y levantando database"
-                    sh 'docker-compose -f src/main/pipelines/database/mongo/docker-compose.yml up -d'
+                    sh 'docker compose -f src/main/pipelines/database/mongo/docker-compose.yml up -d'
                 }
             }
         }
