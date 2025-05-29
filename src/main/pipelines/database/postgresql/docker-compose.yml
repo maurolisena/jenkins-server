@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  postgresql_db:
+    image: postgres:latest
+    container_name: postgresql_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "mlisena"
+      POSTGRES_PASSWORD: "A8424628"
+    networks:
+      - application-network
+    volumes:
+      - postgresql_db_data:/data/db
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U mlisena" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+networks:
+  application-network:
+    external: true
+
+volumes:
+  postgresql_db_data:

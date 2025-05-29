@@ -2,17 +2,40 @@ pipeline {
     agent any
 
     environment {
-            REPO_URL = 'https://github.com/maurolisena/inventory-service.git'
-            BRANCH = 'main'
-            PROJECT_DIR = 'inventory-service'
-            SONARQUBE_ENV = 'SonarQube'
+        REPO_URL = 'https://github.com/maurolisena/inventory-service.git'
+        BRANCH = 'main'
+        PROJECT_DIR = 'inventory-service'
+        SONARQUBE_ENV = 'SonarQube'
     }
 
     stages {
-
         stage('Clonar código fuente') {
             steps {
                 git branch: "${BRANCH}", credentialsId: 'GitHub', url: "${REPO_URL}"
+            }
+        }
+
+        stage('Build y análisis estático') {
+            steps {
+                withSonarQubeEnv("${SONARQUBE_ENV}") {
+                    withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_AUTH_TOKEN')]) {
+                        sh '''
+                            mvn clean compile sonar:sonar \
+                              -Dsonar.projectKey=inventory-service \
+                              -Dsonar.host.url=http://sonarqube:9000 \
+                              -Dsonar.login=$SONAR_AUTH_TOKEN \
+                              -Dsonar.java.binaries=target/classes
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
 
@@ -36,10 +59,10 @@ pipeline {
 
         stage('Esperar a MySQL listo') {
             steps {
+                echo "Esperando que MySQL esté saludable..."
                 script {
                     def retries = 10
                     def wait = 15
-
                     for (int i = 0; i < retries; i++) {
                         def result = sh(script: "docker exec mysql_inventory_database mysqladmin ping -h 127.0.0.1 -u mlisena --password=A8424628 --silent", returnStatus: true)
                         if (result == 0) {
@@ -64,30 +87,6 @@ pipeline {
 
                 echo "Mostrando últimos logs de mysql_inventory_database para verificar scripts init"
                 sh 'docker logs --tail 30 mysql_inventory_database'
-            }
-        }
-
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv("${SONARQUBE_ENV}") {
-                    withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_AUTH_TOKEN')]) {
-                        sh '''
-                            mvn clean compile sonar:sonar \
-                              -Dsonar.projectKey=inventory-service \
-                              -Dsonar.host.url=http://sonarqube:9000 \
-                              -Dsonar.login=$SONAR_AUTH_TOKEN \
-                              -Dsonar.java.binaries=target/classes
-                        '''
-                    }
-                }
-            }
-        }
-
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 2, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
             }
         }
     }

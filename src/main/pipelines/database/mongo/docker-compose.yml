@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+    mongo_db:
+        image: mongo:6.0
+        container_name: mongo_db
+        ports:
+            - "27017:27017"
+        networks:
+            - backend
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: mlisena
+            MONGO_INITDB_ROOT_PASSWORD: A8424628
+            MONGO_INITDB_DATABASE: product_db
+        volumes:
+            - mongo_db_data:/data/db
+        healthcheck:
+            test: [ "CMD", "mongosh", "--eval", "db.runCommand('ping').ok" ]
+            interval: 10s
+            retries: 5
+            start_period: 30s
+
+networks:
+    backend:
+        external: true
+
+volumes:
+    mongo_db_data:

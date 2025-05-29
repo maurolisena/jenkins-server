@@ -1,0 +1,12 @@
+CREATE DATABASE IF NOT EXISTS booking_db;
+USE booking_db;
+
+CREATE TABLE IF NOT EXISTS booking (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    productId VARCHAR(255) NOT NULL,
+    bookingDate VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    createdAt DATETIME NOT NULL,
+    updatedAt DATETIME NOT NULL
+);

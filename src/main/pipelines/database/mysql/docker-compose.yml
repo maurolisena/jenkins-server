@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  mysql_db:
+    image: mysql:8.0
+    container_name: mysql_db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_USER: "mlisena"
+      MYSQL_PASSWORD: "A8424628"
+    networks:
+      - backend
+    volumes:
+      - ./mysql-init:/docker-entrypoint-initdb.d
+      - mysql_db_data:/data/db
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      start_period: 5s
+      interval: 5s
+      timeout: 20s
+      retries: 10
+
+networks:
+  backend:
+    external: true
+
+volumes:
+  mysql_db_data:
