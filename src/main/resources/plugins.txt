@@ -6,6 +6,7 @@ github
 mailer
 email-ext
 pipeline-graph-view
+pipeline-stage-view
 timestamper
 simple-theme-plugin
 matrix-auth
