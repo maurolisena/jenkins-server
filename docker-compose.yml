@@ -13,10 +13,14 @@ services:
       - "50000:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
+      - ./src/main/resources/jenkins-server.yaml:/var/jenkins_home/casc_configs/jenkins-server.yaml
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
-      CASC_JENKINS_CONFIG: /var/jenkins_home/casc_configs/main.yaml
+      CASC_JENKINS_CONFIG: /var/jenkins_home/casc_configs/jenkins-server.yaml
+      GITHUB_USERNAME: maurolisena
+      GITHUB_TOKEN: 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
+      SONARQUBE_TOKEN: squ_2c920467cf87737e5b05b49591e3a8c72970c4d7
     user: root
 
   sonarqube:

@@ -3,12 +3,16 @@ credentials:
     domainCredentials:
       - credentials:
           - usernamePassword:
-              description: "Git Hub Credentials"
-              id: "GitHub"
-              password: "{AQAAABAAAABwETY7/cijZcFJLA9HgcvULwjn2ITyIgUzd37xakRa6+7W65x7HYlRjj48132WGqx0dVr6W9+8P4IM2NzUWQIERa2I+GoL3rVkG1DEiY1jzvfop30/YNmEZS2VRX9lsviIJM07hJVSkOgm62x9L3XAlJZuHTappzkENuBmkI5KFB4=}"
               scope: GLOBAL
-              username: "maurolisena"
+              id: GitHub
+              description: GitHub Credentials
+              username: "${GITHUB_USERNAME}"
+              password: "${GITHUB_TOKEN}"
               usernameSecret: true
+          - string:
+              id: sonar-token
+              secret: "${SONARQUBE_TOKEN}"
+              description: "Token de autenticación SonarQube"
 jenkins:
   authorizationStrategy:
     loggedInUsersCanDoAnything:
