@@ -19,7 +19,7 @@ services:
       JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
       CASC_JENKINS_CONFIG: /var/jenkins_home/casc_configs/jenkins-server.yaml
       GITHUB_USERNAME: maurolisena
-      GITHUB_TOKEN: change_me
+      GITHUB_TOKEN: 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
       SONARQUBE_TOKEN: change_me
     user: root
 
