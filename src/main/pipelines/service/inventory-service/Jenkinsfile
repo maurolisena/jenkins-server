@@ -41,9 +41,11 @@ pipeline {
 
         stage('Limpiar contenedores y volúmenes') {
             steps {
-                sh '''
-                    docker compose down --volumes --remove-orphans
-                '''
+                catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                    sh '''
+                        docker compose down --volumes --remove-orphans
+                    '''
+                }
             }
         }
 
