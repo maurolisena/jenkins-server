@@ -1,0 +1,54 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Limpiar contenedores y volúmenes') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                    sh '''
+                        docker compose -f src/main/pipelines/database/mysql/docker-compose.yml down --volumes --remove-orphans
+                        docker volume rm mysql_db_data || true
+                    '''
+                }
+            }
+        }
+
+        stage('Construir y levantar database') {
+            steps {
+                catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                    echo "Construyendo imágenes y levantando database"
+                    sh 'docker compose -f src/main/pipelines/database/mysql/docker-compose.yml up -d'
+                }
+            }
+        }
+
+        stage('Esperar a mysql listo') {
+            steps {
+                echo "Esperando que mysql_db esté saludable..."
+                sh '''
+                    until docker exec mysql_db mysqladmin ping -h localhost -u root --password=A8424628 --silent; do
+                      echo "Esperando a que mysql_db esté listo..."
+                      sleep 2
+                    done
+                '''
+            }
+        }
+
+        stage('Verificar contenedores y logs de postgresql') {
+            steps {
+                echo "Listando contenedores activos"
+                sh 'docker ps'
+
+                echo "Mostrando últimos logs de mysql_db para verificar scripts init"
+                sh 'docker logs --tail 30 mysql_db'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finalizado'
+        }
+    }
+}
