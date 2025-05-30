@@ -1,8 +1,8 @@
 version: "3.9"
 services:
-    redis-db:
+    redis_db:
         image: redis:7.2-alpine
-        container_name: redis-db
+        container_name: redis_db
         networks:
             - backend
         ports:
