@@ -4,8 +4,8 @@ pipeline {
     environment {
         REPO_URL = 'https://github.com/maurolisena/config-server.git'
         BRANCH = 'master'
-        GIT_USERNAME = credentials('Github')
-        GIT_TOKEN = credentials('Github')
+        GIT_USERNAME = credentials('GitHub')
+        GIT_TOKEN = credentials('GitHub')
     }
 
     stages {
