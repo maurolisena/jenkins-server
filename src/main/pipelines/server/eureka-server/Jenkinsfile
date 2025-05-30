@@ -17,7 +17,9 @@ pipeline {
 
         stage('Levantar servicios') {
             steps {
-                sh 'docker compose up -d'
+                dir("${PROJECT_DIR}") {
+                    sh 'docker compose up -d'
+               }
             }
         }
 

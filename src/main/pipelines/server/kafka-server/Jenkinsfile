@@ -14,9 +14,12 @@ pipeline {
                 git branch: "${BRANCH}", credentialsId: 'GitHub', url: "${REPO_URL}"
             }
         }
+
         stage('Levantar servicios') {
             steps {
-                sh 'docker compose up -d'
+                dir("${PROJECT_DIR}") {
+                    sh 'docker compose up -d'
+                }
             }
         }
 

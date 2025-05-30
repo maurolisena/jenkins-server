@@ -3,7 +3,10 @@ pipelineJob('config-server') {
         cpsScm {
             scm {
                 git {
-                    remote { url('https://github.com/maurolisena/jenkins-server.git') }
+                    remote {
+                        url('https://github.com/maurolisena/jenkins-server.git')
+                        credentials('GitHub')
+                    }
                     branch('main')
                 }
             }
@@ -17,7 +20,10 @@ pipelineJob('keycloack-server') {
         cpsScm {
             scm {
                 git {
-                    remote { url('https://github.com/maurolisena/jenkins-server.git') }
+                    remote {
+                        url('https://github.com/maurolisena/jenkins-server.git')
+                        credentials('GitHub')
+                    }
                     branch('main')
                 }
             }
@@ -31,7 +37,10 @@ pipelineJob('gateway-server') {
         cpsScm {
             scm {
                 git {
-                    remote { url('https://github.com/maurolisena/jenkins-server.git') }
+                    remote {
+                        url('https://github.com/maurolisena/jenkins-server.git')
+                        credentials('GitHub')
+                    }
                     branch('main')
                 }
             }
@@ -45,7 +54,10 @@ pipelineJob('kafka-server') {
         cpsScm {
             scm {
                 git {
-                    remote { url('https://github.com/maurolisena/jenkins-server.git') }
+                    remote {
+                        url('https://github.com/maurolisena/jenkins-server.git')
+                        credentials('GitHub')
+                    }
                     branch('main')
                 }
             }
@@ -59,7 +71,10 @@ pipelineJob('eureka-server') {
         cpsScm {
             scm {
                 git {
-                    remote { url('https://github.com/maurolisena/jenkins-server.git') }
+                    remote {
+                        url('https://github.com/maurolisena/jenkins-server.git')
+                        credentials('GitHub')
+                    }
                     branch('main')
                 }
             }

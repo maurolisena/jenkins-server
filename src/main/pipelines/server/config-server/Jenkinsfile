@@ -10,9 +10,7 @@ pipeline {
     stages {
             stage('Clonar código fuente') {
                 steps {
-                    dir("${PROJECT_DIR}") {
-                        git branch: "${BRANCH}", credentialsId: 'GitHub', url: "${REPO_URL}"
-                    }
+                    git branch: "${BRANCH}", credentialsId: 'GitHub', url: "${REPO_URL}"
                 }
             }
 
