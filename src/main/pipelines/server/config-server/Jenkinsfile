@@ -4,56 +4,53 @@ pipeline {
     environment {
         REPO_URL = 'https://github.com/maurolisena/config-server.git'
         BRANCH = 'master'
-        PROJECT_DIR = 'config-server'
         GIT_USERNAME = credentials('Github')
         GIT_TOKEN = credentials('Github')
     }
 
     stages {
-            stage('Clonar código fuente') {
-                steps {
-                    git branch: "${BRANCH}", credentialsId: 'GitHub', url: "${REPO_URL}"
-                }
-            }
-
-            stage('Levantar servicios') {
-                steps {
-                    dir("${PROJECT_DIR}") {
-                        sh 'docker compose up -d'
-                    }
-                }
-            }
-
-            stage('Build eureka-server') {
-                steps {
-                    build job: 'eureka-server'
-                }
-            }
-
-            stage('Build keycloack-server') {
-                steps {
-                    build job: 'keycloack-server'
-                }
-            }
-
-            stage('Build kafka-server') {
-                steps {
-                    build job: 'kafka-server'
-                }
-            }
-
-            stage('Levantar servicios adicionales') {
-                steps {
-                    build job: 'gateway-server'
-                }
-            }
-
-            stage('Verificar servicios') {
-                steps {
-                    sh 'docker ps'
-                }
+        stage('Clonar código fuente') {
+            steps {
+                git branch: "${BRANCH}", credentialsId: 'GitHub', url: "${REPO_URL}"
             }
         }
+
+        stage('Levantar servicios') {
+            steps {
+                sh 'docker compose up -d'
+            }
+        }
+
+        stage('Build eureka-server') {
+            steps {
+                build job: 'eureka-server'
+            }
+        }
+
+        stage('Build keycloack-server') {
+            steps {
+                build job: 'keycloack-server'
+            }
+        }
+
+        stage('Build kafka-server') {
+            steps {
+                build job: 'kafka-server'
+            }
+        }
+
+        stage('Levantar servicios adicionales') {
+            steps {
+                build job: 'gateway-server'
+            }
+        }
+
+        stage('Verificar servicios') {
+            steps {
+                sh 'docker ps'
+            }
+        }
+    }
 
     post {
         always {

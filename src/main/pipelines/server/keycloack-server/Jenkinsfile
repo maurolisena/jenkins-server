@@ -4,7 +4,6 @@ pipeline {
     environment {
             REPO_URL = 'https://github.com/maurolisena/keycloack-server.git'
             BRANCH = 'main'
-            PROJECT_DIR = 'keycloack-server'
     }
 
     stages {
@@ -17,9 +16,7 @@ pipeline {
 
         stage('Levantar servicios') {
             steps {
-                dir("${PROJECT_DIR}") {
-                    sh 'docker compose up -d'
-                }
+                sh 'docker compose up -d'
             }
         }
 
