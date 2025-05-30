@@ -27,7 +27,7 @@ pipeline {
             steps {
                 echo "Esperando que postgresqlDb esté saludable..."
                 sh '''
-                    until docker exec postgresql_db CMD-SHELL, pg_isready -U mlisena; do
+                    until docker exec postgresql_db pg_isready -U mlisena; do
                       echo "Esperando a que postgresql_db esté listo..."
                       sleep 2
                     done
