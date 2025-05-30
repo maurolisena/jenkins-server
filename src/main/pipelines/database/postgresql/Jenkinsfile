@@ -1,0 +1,54 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Limpiar contenedores y volúmenes') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                    sh '''
+                        docker compose -f src/main/pipelines/database/postgresql/docker-compose.yml down --volumes --remove-orphans
+                        docker volume rm postgresql_db_data || true
+                    '''
+                }
+            }
+        }
+
+        stage('Construir y levantar database') {
+            steps {
+                catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                    echo "Construyendo imágenes y levantando database"
+                    sh 'docker compose -f src/main/pipelines/database/postgresql/docker-compose.yml up -d'
+                }
+            }
+        }
+
+        stage('Esperar a postgresql listo') {
+            steps {
+                echo "Esperando que postgresqlDb esté saludable..."
+                sh '''
+                    until docker exec postgresql_db CMD-SHELL, pg_isready -U mlisena; do
+                      echo "Esperando a que postgresql_db esté listo..."
+                      sleep 2
+                    done
+                '''
+            }
+        }
+
+        stage('Verificar contenedores y logs de postgresql') {
+            steps {
+                echo "Listando contenedores activos"
+                sh 'docker ps'
+
+                echo "Mostrando últimos logs de postgresql_db para verificar scripts init"
+                sh 'docker logs --tail 30 postgresql_db'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finalizado'
+        }
+    }
+}
