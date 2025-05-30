@@ -44,7 +44,6 @@ pipeline {
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
                     sh '''
                         docker compose down --volumes --remove-orphans
-                        docker volume rm mysql_database_data || true
                     '''
                 }
             }
@@ -54,39 +53,6 @@ pipeline {
             steps {
                 echo "Construyendo imágenes y levantando servicios en background"
                 sh 'docker compose up -d --build'
-            }
-        }
-
-        stage('Esperar a MySQL listo') {
-            steps {
-                echo "Esperando que MySQL esté saludable..."
-                script {
-                    def retries = 10
-                    def wait = 15
-                    for (int i = 0; i < retries; i++) {
-                        def result = sh(script: "docker exec mysql_inventory_database mysqladmin ping -h 127.0.0.1 -u mlisena --password=A8424628 --silent", returnStatus: true)
-                        if (result == 0) {
-                            echo "MySQL está listo"
-                            break
-                        } else {
-                            echo "Esperando MySQL (${i + 1}/$retries)..."
-                            sleep(wait)
-                        }
-                        if (i == retries - 1) {
-                            error("MySQL no respondió después de ${retries * wait} segundos.")
-                        }
-                    }
-                }
-            }
-        }
-
-        stage('Verificar contenedores y logs de MySQL') {
-            steps {
-                echo "Listando contenedores activos"
-                sh 'docker ps'
-
-                echo "Mostrando últimos logs de mysql_inventory_database para verificar scripts init"
-                sh 'docker logs --tail 30 mysql_inventory_database'
             }
         }
     }
