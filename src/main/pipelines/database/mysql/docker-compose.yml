@@ -7,8 +7,7 @@ services:
       - "3306:3306"
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-      MYSQL_USER: "mlisena"
-      MYSQL_PASSWORD: "A8424628"
+      MYSQL_ROOT_PASSWORD: "A8424628"
     networks:
       - backend
     volumes:
