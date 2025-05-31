@@ -12,12 +12,13 @@ services:
             MONGO_INITDB_ROOT_PASSWORD: A8424628
         volumes:
             - mongo_db_data:/data/db
-            - ./init:/docker-entrypoint-initdb.d
+            - ./init/01-init-product-db.js:/docker-entrypoint-initdb.d:ro
         healthcheck:
             test: [ "CMD", "mongosh", "--eval", "db.runCommand('ping').ok" ]
             interval: 10s
             retries: 5
             start_period: 30s
+        user: root
 
 networks:
     backend:
