@@ -7,7 +7,7 @@ credentials:
               id: GitHub
               description: GitHub Credentials
               username: "${GITHUB_USERNAME}"
-              secret: ${readFile:/run/secrets/github-token.txt}
+              password: ${readFile:/run/secrets/github-token.txt}
               usernameSecret: true
           - string:
               id: sonar-token
@@ -141,8 +141,6 @@ unclassified:
     storage: "file"
   gitHubConfiguration:
     apiRateLimitChecker: ThrottleForNormalize
-    clientCacheSize: 20
-    credentialsId: "GitHub"
   gitHubPluginConfig:
     hookUrl: "http://localhost:8082/github-webhook/"
   junitTestResultStorage:

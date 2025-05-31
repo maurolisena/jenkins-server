@@ -11,18 +11,22 @@ services:
     ports:
       - "8082:8080"
       - "50000:50000"
+    depends_on:
+      - sonarqube
     volumes:
+      - ./src/main/resources/init-jenkins.sh:/init-jenkins.sh:ro
       - jenkins_home:/var/jenkins_home
+      - sonar_jenkins_token:/run/secrets
       - ./src/main/resources/jenkins-server.yaml:/var/jenkins_home/casc_configs/jenkins-server.yaml
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./jenkins-token.txt:/run/secrets/jenkins-token.txt
-      - ./github-token.txt:/run/secrets/github-token.txt
+      - ./src/main/resources/github-token.txt:/run/secrets/github-token.txt:ro
     environment:
       JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
       CASC_JENKINS_CONFIG: /var/jenkins_home/casc_configs/jenkins-server.yaml
       GITHUB_USERNAME: maurolisena
       GITHUB_TOKEN_FILE: /run/secrets/github-token.txt
       SONARQUBE_TOKEN_FILE: /run/secrets/jenkins-token.txt
+    entrypoint: ["/bin/sh", "/init-jenkins.sh"]
     user: root
 
   sonarqube:
@@ -39,9 +43,7 @@ services:
     volumes:
       - sonarqube_data:/opt/sonarqube/data
       - sonarqube_logs:/opt/sonarqube/logs
-      - ./init-sonar.sh:/opt/init-sonar.sh
-      - ./jenkins-token.txt:/opt/sonarqube/jenkins-token.txt
-    entrypoint: [ "/bin/bash", "-c", "/opt/init-sonar.sh" ]
+      - sonar_jenkins_token:/opt/sonarqube/token_shared
     networks:
       - backend
 
@@ -57,11 +59,25 @@ services:
     networks:
       - backend
 
+  sonar-init:
+    image: curlimages/curl:latest
+    container_name: sonar-init-script
+    depends_on:
+      - sonarqube
+    networks:
+      - backend
+    volumes:
+      - ./src/main/resources/init-sonar.sh:/init-sonar.sh:ro
+      - sonar_jenkins_token:/token_shared
+    entrypoint: [ "sh", "/init-sonar.sh" ]
+    user: root
+
 volumes:
   jenkins_home:
   sonarqube_data:
   sonarqube_logs:
   postgres_data:
+  sonar_jenkins_token:
 
 networks:
   backend:
