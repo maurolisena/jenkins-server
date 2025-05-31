@@ -1,21 +1,8 @@
 version: "3.9"
-
 services:
-    mongo_data_prep:
-        image: busybox
-        command: chown -R 999:999 /data/db
-        volumes:
-            - mongo_db_data:/data/db
-        entrypoint: ["sh", "-c", "chown -R 999:999 /data/db"]
-        networks:
-            - backend
-        restart: "no"
-
     mongo_db:
         image: mongo:6.0
         container_name: mongo_db
-        depends_on:
-            - mongo_data_prep
         ports:
             - "27017:27017"
         networks:
@@ -24,8 +11,8 @@ services:
             MONGO_INITDB_ROOT_USERNAME: mlisena
             MONGO_INITDB_ROOT_PASSWORD: A8424628
         volumes:
-            - ./01-init-product-db.js:/docker-entrypoint-initdb.d/01-init-product-db.js:ro
             - mongo_db_data:/data/db
+            - ./init:/docker-entrypoint-initdb.d
         healthcheck:
             test: [ "CMD", "mongosh", "--eval", "db.runCommand('ping').ok" ]
             interval: 10s
