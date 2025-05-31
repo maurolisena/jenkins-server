@@ -1,8 +1,21 @@
 version: "3.9"
+
 services:
+    mongo_data_prep:
+        image: busybox
+        command: chown -R 999:999 /data/db
+        volumes:
+            - mongo_db_data:/data/db
+        entrypoint: ["sh", "-c", "chown -R 999:999 /data/db"]
+        networks:
+            - backend
+        restart: "no"
+
     mongo_db:
         image: mongo:6.0
         container_name: mongo_db
+        depends_on:
+            - mongo_data_prep
         ports:
             - "27017:27017"
         networks:
