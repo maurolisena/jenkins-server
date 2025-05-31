@@ -10,8 +10,8 @@ services:
         environment:
             MONGO_INITDB_ROOT_USERNAME: mlisena
             MONGO_INITDB_ROOT_PASSWORD: A8424628
-            MONGO_INITDB_DATABASE: product_db
         volumes:
+            - ./01-init-product-db.js:/docker-entrypoint-initdb.d/01-init-product-db.js
             - mongo_db_data:/data/db
         healthcheck:
             test: [ "CMD", "mongosh", "--eval", "db.runCommand('ping').ok" ]
