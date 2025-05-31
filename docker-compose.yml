@@ -15,12 +15,14 @@ services:
       - jenkins_home:/var/jenkins_home
       - ./src/main/resources/jenkins-server.yaml:/var/jenkins_home/casc_configs/jenkins-server.yaml
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./jenkins-token.txt:/run/secrets/jenkins-token.txt
+      - ./github-token.txt:/run/secrets/github-token.txt
     environment:
       JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
       CASC_JENKINS_CONFIG: /var/jenkins_home/casc_configs/jenkins-server.yaml
       GITHUB_USERNAME: maurolisena
-      GITHUB_TOKEN: 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
-      SONARQUBE_TOKEN: squ_deeda4977d4e7e76b6ba4f919dbccac4c44d60ab
+      GITHUB_TOKEN_FILE: /run/secrets/github-token.txt
+      SONARQUBE_TOKEN_FILE: /run/secrets/jenkins-token.txt
     user: root
 
   sonarqube:
@@ -37,6 +39,9 @@ services:
     volumes:
       - sonarqube_data:/opt/sonarqube/data
       - sonarqube_logs:/opt/sonarqube/logs
+      - ./init-sonar.sh:/opt/init-sonar.sh
+      - ./jenkins-token.txt:/opt/sonarqube/jenkins-token.txt
+    entrypoint: [ "/bin/bash", "-c", "/opt/init-sonar.sh" ]
     networks:
       - backend
 
