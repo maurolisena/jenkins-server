@@ -12,7 +12,6 @@ services:
     networks:
       - backend
     volumes:
-      - ./mysql-init:/docker-entrypoint-initdb.d
       - mysql_db_data:/data/db
     healthcheck:
       test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD

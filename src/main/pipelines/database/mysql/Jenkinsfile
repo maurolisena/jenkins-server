@@ -8,7 +8,6 @@ pipeline {
                 catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
                     sh '''
                         docker compose -f src/main/pipelines/database/mysql/docker-compose.yml down --volumes --remove-orphans
-                        docker volume rm mysql_db_data || true
                     '''
                 }
             }
